@@ -1,39 +1,53 @@
-📄 PORTADA DEL PROYECTO
+# Proyecto Megatronix — Simulador de Caché Directa
+### Sistemas Operativos — Ingeniería de Software (1º)
 
-UNIVERSIDAD / CENTRO: ____________________________
-ASIGNATURA: Sistemas Operativos
-CURSO: 2025 – 2026
-GRADO: Ingeniería de Software
-PROFESOR: ____________________________
+---
 
-<br>
-PROYECTO I – MEGATRONIX
-Simulación de una Caché Directa de 8 Líneas y Bloques de 16 Bytes
+## 📌 Descripción general
 
-<br><br>
+Este proyecto implementa un **simulador de memoria caché mapeada de forma directa**, con:
 
-Alumno: ______________________________
-Grupo: _______________________________
-Fecha de entrega: ____________________
+- **8 líneas de caché**
+- **16 bytes por bloque**
+- **4096 bytes de memoria RAM simulada**
 
-<br><br>
+El programa lee direcciones desde un fichero (`accesos_memoria.txt`), determina si cada acceso produce un **HIT** o **MISS**, carga los bloques necesarios desde la RAM y actualiza los contadores de tiempo y fallos.
 
-Descripción del proyecto
+Además, el simulador reconstruye el texto almacenado en la RAM **leyendo cada carácter desde la caché**, tal y como se pide en el enunciado.
 
-En este proyecto se desarrolla un simulador de memoria caché directa de 8 líneas, capaz de procesar un fichero de direcciones de memoria, cargar bloques desde una RAM simulada y mostrar estadísticas de aciertos, fallos y tiempo total de acceso.
-Además, el programa reconstruye el mensaje almacenado en memoria leyendo cada byte desde la caché, carácter a carácter.
+---
 
-<br>
-Archivos entregados
+## 🧠 Cómo funciona
 
-Memsyc.c → Código principal del simulador
+### 1. Inicialización
+- La RAM se carga desde `CONTENTS_RAM.bin`.
+- La caché se inicializa con etiquetas inválidas (`0xFF`) y valores de relleno (`0x23`).
 
-CONTENTS_RAM.bin → RAM simulada (4096 bytes)
+### 2. Procesamiento de accesos
+Para cada dirección del fichero:
+- Se divide en: **Etiqueta**, **Línea**, **Palabra**, **Bloque**.
+- Se comprueba si hay **HIT** (misma etiqueta).
+- Si hay **MISS**, se copia el bloque completo (16 bytes) desde la RAM a la línea de caché.
+- Se lee el byte de la caché correspondiente.
+- Si el byte es imprimible, se añade al texto reconstruido; si no, se usa un `.`.
 
-accesos_memoria.txt → Fichero de accesos usado para la simulación
+### 3. Contadores
+- HIT → tiempo += 1  
+- MISS → tiempo += 20  
+- Se incrementan los accesos y fallos.
 
-CONTENTS_CACHE.bin → Volcado final de la caché generado por el simulador
+### 4. Salida final
+El programa muestra:
+- El contenido final de la caché.
+- Accesos totales y fallos totales.
+- Tiempo total y tiempo medio.
+- Texto completo reconstruido.
+- Genera `CONTENTS_CACHE.bin`.
 
-README.md → Instrucciones y explicación del proyecto
+---
 
-<br>
+## 🛠 Cómo compilar
+
+```bash
+gcc -o simulador Memsyc.c
+
